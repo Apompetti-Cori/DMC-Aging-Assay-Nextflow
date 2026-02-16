@@ -25,5 +25,6 @@ Code availability for DMC Aging Assay
     - Indicate "fastq" or "bam" ("fastq" is default)
 
 - Supply the cpgs that will be used to calculate JSD in bed format
+    - This will be used to ensure that all CpGs are covered by a read
 
 - Run nextflow shell script to execute Nextflow Pipeline
