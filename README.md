@@ -17,3 +17,13 @@ Code availability for DMC Aging Assay
     - Refer to ![nextflow.config](nextflow.config)
         - Fill in bismark index formatted how 'hg19' is
         - Label your genome and reference it in the ![nextflow shell script](nextflow_template.sh).
+
+- Supply regions where you are targeting CpGs for JSD calculation in bed format.
+    - also supply flanks of these regions in bed format if you wish to clip the ends of the reads (optional)
+
+- Supply input file classification (pipeline has only been configured to run with fastq files)
+    - Indicate "fastq" or "bam" ("fastq" is default)
+
+- Supply the cpgs that will be used to calculate JSD in bed format
+
+- Run nextflow shell script to execute Nextflow Pipeline
