@@ -1,0 +1,26 @@
+report_header_info:
+  - Contact E-mail: "apompetti@coriell.org"
+  - Application Type: "Aging Entropy Nextflow Pipeline"
+
+use_filename_as_sample_name: 
+  true
+
+sample_names_config:
+  - type: replace
+    pattern: '_mL_PE_[12]'  # Matches _mL_PE_1 and _mL_PE_2
+    replacement: ''
+  - type: replace
+    pattern: '_sL_PE_[12]'  # Matches _sL_PE_1 and _sL_PE_2
+    replacement: ''
+  - type: replace
+    pattern: '_[ms]L_[SP]E'  # Matches _mL_SE, _sL_SE, _mL_PE, _sL_PE
+    replacement: ''
+
+fn_clean_exts:
+  - "_pe_splitting_report.txt"
+  - ".fastp.json"
+  - ".fastp.html"
+  - ".flagstat.txt"
+  - ".featureCounts.txt"
+  - "_PE_report.txt"
+  - "_SE_report.txt"
