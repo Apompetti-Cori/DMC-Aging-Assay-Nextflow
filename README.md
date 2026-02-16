@@ -2,7 +2,7 @@
 Code availability for DMC Aging Assay
 
 # How to run
-- In order to run this pipeline, populate the sample table with the fastq files you will be using.
+- In order to run this pipeline, populate the ![sample table](sample_table_template.csv) with the fastq files you will be using.
     - First, fill in the sample_id (unique to a run), sample (unique across runs), and batch (relative to the sample_id).
     - Second, fill the r[0-9]_L[0-9] columns with the fastqs assigned to the sample_id
         - If single end simply fill in r1_L1
@@ -12,3 +12,8 @@ Code availability for DMC Aging Assay
         - If marked as reference, the sample will be included in the reference distribution for calculating JSD
         - If marked as sample, the sample will be excluded from the reference
         - All samples regardless of condition get compared to the reference distribution
+
+- Configure the pipeline to include the genome you will be aligning the fastq files to
+    - Refer to ![nextflow.config](nextflow.config)
+        - Fill in bismark index formatted how 'hg19' is
+        - Label your genome and reference it in the ![nextflow shell script](nextflow_template.sh).
