@@ -50,6 +50,8 @@ process CALC_SUMMARY {
         }
     }
 
+    storeDir "${launchDir}/.nextflow/store/${batch}/${id}/${params.pubdir}/"
+
     // Check batch and save output accordingly
     publishDir "${params.outdir}", mode: 'link', saveAs: { 
       filename ->
@@ -63,6 +65,7 @@ process CALC_SUMMARY {
 
     output:
     tuple val(id), val(batch), path("*_meth_jsd.tsv"), emit: meth_jsd, optional: true
+    tuple val(id), val(batch), path("*.rds"), emit: rds, optional: true
 
     script:
 

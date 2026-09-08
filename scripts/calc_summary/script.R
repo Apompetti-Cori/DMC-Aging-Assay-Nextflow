@@ -1,14 +1,15 @@
 library(magrittr)
 library(tidyverse)
 library(vroom)
+library(entropy)
 
-args = commandArgs(trailingOnly = TRUE)
+args <- commandArgs(trailingOnly = TRUE)
 ### Arguments script neeeds
 # Rscript calc_summary/script.R reference_dist_filename allele_counts_filename
 # bs_efficiency_filename file_to_save
 
 ### Read in files and whitelisted CpGs
-# reference distribution for calculating JDS
+# reference distribution for calculating JSD
 vroom::vroom(args[1]) %>%
   dplyr::select(
     chr,
@@ -46,7 +47,7 @@ vroom::vroom(args[3]) %>%
 data %>%
   # calculate average percent methylation
   group_by(target, target_reads) %>%
-  summarize(
+  dplyr::reframe(
     avg_perc_meth = (sum((count_meth_cpgs / target_cpg_count) * read_count) /
       target_reads)
   ) %>%
@@ -76,10 +77,39 @@ data %>%
     data.cord = map(data, ~ .[c(1, 2), ]),
     data.syn = map(data, ~ .[c(1, 3), ]),
     jsd = map(data.cord, ~ sqrt(philentropy::JSD(., unit = "log2"))),
-    jsd.syn = map(data.syn, ~ sqrt(philentropy::JSD(., unit = "log2")))
+    jsd.syn = map(data.syn, ~ sqrt(philentropy::JSD(., unit = "log2"))),
+    entropy = map(
+      data.cord,
+      ~ {
+        p <- na.omit(unlist(.[1, ]))
+        philentropy::H(p)
+      }
+    ),
+    entropy.relative = entropy <- map(
+      data.cord,
+      ~ {
+        p <- na.omit(unlist(.[1, ]))
+        philentropy::H(p) /
+          log2(length(p))
+      }
+    ),
   ) %>%
-  unnest(c(jsd, jsd.syn)) %>%
+  unnest(c(jsd, jsd.syn, entropy, entropy.relative)) %>%
   select(-c(data, data.cord, data.syn)) -> jsd
+
+raw_data <- data %>%
+  ### add in the cord blood reference information
+  inner_join(cb_ref, by = c("target", "count_meth_cpgs")) %>%
+  ### reformat for JSD function
+  select(target, count_meth_cpgs, sample.prop = probability, prop, syn.prop) %>%
+  pivot_longer(
+    c(sample.prop, prop, syn.prop),
+    names_to = 'set',
+    values_to = 'prop'
+  )
+
+
+saveRDS(raw_data, file = gsub("_meth_jsd.tsv", ".rds", args[4]))
 
 ### Join together and save
 left_join(perc_meth, jsd, by = "target") %>%
