@@ -1,0 +1,12 @@
+# install.packages("pak")
+#pak::pak("nbafrank/uvr-r")
+library(uvr)
+
+uvr::init()
+uvr::add("tidyverse")
+uvr::add("data.table")
+uvr::add("dbplyr")
+uvr::add("DBI")
+uvr::add("here")
+uvr::add("duckdb")
+uvr::add("patchwork")

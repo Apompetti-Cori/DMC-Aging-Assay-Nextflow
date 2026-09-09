@@ -1,0 +1,11 @@
+[project]
+name = "AgingEntropyNextflow"
+
+[dependencies]
+DBI = "*"
+"data.table" = "*"
+dbplyr = "*"
+duckdb = "*"
+here = "*"
+patchwork = "*"
+tidyverse = "*"
