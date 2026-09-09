@@ -15,9 +15,16 @@ conn <- dbConnect(
 
 data <- left_join(
   tbl(conn, "collapsed_data"),
-  tbl(conn, "metadata") %>% distinct(sample, age, cohort),
+  tbl(conn, "metadata") %>% distinct(sample, age),
   by = "sample"
 ) %>%
+  mutate(
+    cohort = case_when(
+      starts_with(sample, "ND") ~ "NINDS",
+      starts_with(sample, "CUH") ~ "CUH",
+      TRUE ~ "Other"
+    )
+  ) %>%
   filter(cohort == "NINDS") %>%
   collect() %>%
   group_by(
